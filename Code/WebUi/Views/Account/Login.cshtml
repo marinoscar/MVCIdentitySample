@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Main.cshtml";
+    var authentication = Context.GetOwinContext().Authentication;
+}
+
+<h2>Login</h2>
+<form method="POST" action="/Account/External?@Request.QueryString">
+    <ul>
+        @foreach (var description in authentication.GetAuthenticationTypes().Where(d => !String.IsNullOrEmpty(d.Caption)))
+        {
+            <li>
+                <input type="submit" name="submit.External.@description.AuthenticationType" value="@description.Caption" />
+            </li>
+        }
+    </ul>
+</form>
