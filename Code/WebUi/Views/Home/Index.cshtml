@@ -1,8 +1,19 @@
 ﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Main.cshtml";
+    var authentication = Context.GetOwinContext().Authentication;
 }
 
 <h2>Welcome</h2>
 
-@Html.ActionLink("Login", "Login", "Account")
+@{
+    if (authentication.User != null && authentication.User.Identity.IsAuthenticated)
+    {
+        <p>Welcome Oscar Marin</p>
+        @Html.ActionLink("Logout", "Logout", "Account")
+    }
+    else
+    {
+        @Html.ActionLink("Login", "Login", "Account") 
+    }
+}

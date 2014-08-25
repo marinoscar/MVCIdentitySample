@@ -17,7 +17,7 @@ obj
 /Publish
 */_ReSharper.*
 /Code/packages
-/Code/Entegreat.ScriptEngine/Publish
+/Code/WebUi/*.auth.keys
 
 
 # mstest test results
