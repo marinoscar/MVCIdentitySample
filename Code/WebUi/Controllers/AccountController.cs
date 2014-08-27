@@ -73,7 +73,7 @@ namespace WebUi.Controllers
         #endregion
 
         #region External Login Actions
-        
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]

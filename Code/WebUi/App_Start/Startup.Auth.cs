@@ -37,8 +37,10 @@ namespace WebUi.App_Start
                 LogoutPath = new PathString("/Account/Logout"),
             });
 
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
             // Enable the External Sign In Cookie.
-            app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
+            //app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
 
 
             // Enable Google authentication.
@@ -53,7 +55,7 @@ namespace WebUi.App_Start
             {
                 ClientId = keys.Public,
                 ClientSecret = keys.Private,
-                CallbackPath = new PathString("/googleoauth2callback")
+                //CallbackPath = new PathString("/Account/ExternalCallback")
             };
             return options;
         }
