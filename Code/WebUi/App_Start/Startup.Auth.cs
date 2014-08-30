@@ -48,8 +48,7 @@ namespace WebUi.App_Start
             var options = new GoogleOAuth2AuthenticationOptions()
             {
                 ClientId = keys.Public,
-                ClientSecret = keys.Private,
-                AuthenticationMode = AuthenticationMode.Active
+                ClientSecret = keys.Private
             };
             return options;
         }

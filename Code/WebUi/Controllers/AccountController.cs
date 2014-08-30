@@ -62,11 +62,9 @@ namespace WebUi.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut();
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie);
             return RedirectToAction("Index", "Home");
         }
 
