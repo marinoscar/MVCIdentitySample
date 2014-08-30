@@ -65,6 +65,7 @@ namespace WebUi.App_Start
                     AppId = keys.Public,
                     AppSecret = keys.Private
                 };
+            options.Scope.Add("email");
             return options;
         }
 
