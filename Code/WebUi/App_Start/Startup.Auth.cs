@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.Facebook;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.Infrastructure;
 using Microsoft.Owin.Security.OAuth;
@@ -37,8 +38,10 @@ namespace WebUi.App_Start
             //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
             // Enable the External Sign In Cookie.
             app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
-            // Enable Google authentication.
+
+            // Enable Social Authentication
             app.UseGoogleAuthentication(GetGoogleOptions());
+            app.UseFacebookAuthentication(GetFacebookOptions());
         }
 
         private static GoogleOAuth2AuthenticationOptions GetGoogleOptions()
@@ -52,5 +55,18 @@ namespace WebUi.App_Start
             };
             return options;
         }
+
+        private static FacebookAuthenticationOptions GetFacebookOptions()
+        {
+            var reader = new KeyReader();
+            var keys = reader.GetKey("facebook");
+            var options = new FacebookAuthenticationOptions()
+                {
+                    AppId = keys.Public,
+                    AppSecret = keys.Private
+                };
+            return options;
+        }
+
     }
 }
