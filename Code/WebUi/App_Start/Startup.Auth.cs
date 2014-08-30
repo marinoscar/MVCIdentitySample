@@ -14,9 +14,9 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using Security;
 using WebUi.App_Start;
+using WebUi.Models;
 
 [assembly: OwinStartup(typeof(Startup))]
-
 namespace WebUi.App_Start
 {
     public partial class Startup
@@ -28,26 +28,20 @@ namespace WebUi.App_Start
 
         public void ConfigureAuth(IAppBuilder app)
         {
-            // Enable the Application Sign In Cookie.
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                AuthenticationMode = AuthenticationMode.Passive,
-                LoginPath = new PathString("/Account/Login"),
-                LogoutPath = new PathString("/Account/Logout"),
-            });
-
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-
+            app.UseCookieAuthentication(new CookieAuthenticationOptions()
+                {
+                    AuthenticationMode = AuthenticationMode.Active,
+                    AuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
+                    ExpireTimeSpan = TimeSpan.FromMinutes(30)
+                });
+            //app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
             // Enable the External Sign In Cookie.
-            //app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
-
-
+            app.SetDefaultSignInAsAuthenticationType(DefaultAuthenticationTypes.ExternalCookie);
             // Enable Google authentication.
             app.UseGoogleAuthentication(GetGoogleOptions());
         }
 
-        private GoogleOAuth2AuthenticationOptions GetGoogleOptions()
+        private static GoogleOAuth2AuthenticationOptions GetGoogleOptions()
         {
             var reader = new KeyReader();
             var keys = reader.GetKey("google");
@@ -55,7 +49,7 @@ namespace WebUi.App_Start
             {
                 ClientId = keys.Public,
                 ClientSecret = keys.Private,
-                //CallbackPath = new PathString("/Account/ExternalCallback")
+                AuthenticationMode = AuthenticationMode.Active
             };
             return options;
         }

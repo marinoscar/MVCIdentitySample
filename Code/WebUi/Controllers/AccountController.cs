@@ -54,7 +54,7 @@ namespace WebUi.Controllers
         #endregion
 
         #region Login Actions
-        
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -74,45 +74,29 @@ namespace WebUi.Controllers
 
         #region External Login Actions
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [AllowAnonymous, HttpGet]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
-            if (loginInfo == null)
+            if (loginInfo == null || !loginInfo.ExternalIdentity.IsAuthenticated)
             {
                 return RedirectToAction("Login");
             }
-
-            // Sign in the user with this external login provider if the user already has a login
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.Failure:
-                default:
-                    // If the user does not have an account, then prompt the user to create an account
-                    //ViewBag.ReturnUrl = returnUrl;
-                    //ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    //return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
-                    return RedirectToLocal(returnUrl);
-            }
+            
+            AuthenticationManager.SignIn(loginInfo.ExternalIdentity);
+            return RedirectToLocal(returnUrl);
         }
 
         #endregion
 
         #region Helper Methods
-        
+
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
@@ -120,7 +104,7 @@ namespace WebUi.Controllers
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");
-        } 
+        }
 
         #endregion
 

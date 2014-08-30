@@ -1,16 +1,12 @@
-﻿@{
-    ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_Main.cshtml";
-    var authentication = Context.GetOwinContext().Authentication;
-}
-
-<h2>Welcome</h2>
-
+﻿@using Microsoft.AspNet.Identity
 @{
-    if (authentication.User != null && authentication.User.Identity.IsAuthenticated)
+    Layout = "~/Views/Shared/_Main.cshtml";
+}
+<h2>Welcome</h2>
+@{
+    if (Request.IsAuthenticated)
     {
-        <p>Welcome Oscar Marin</p>
-        @Html.ActionLink("Logout", "Logout", "Account")
+        <p>Welcome @User.Identity.GetUserName()</p>
     }
     else
     {
